@@ -1,4 +1,3 @@
-
 📑 Basically, read the [Official Docs](https://discord.com/developers/docs/tutorials/hosting-on-cloudflare-workers).
 
 ⚠️ I think that you need a paid plan for workers to run this program on cloudflare.

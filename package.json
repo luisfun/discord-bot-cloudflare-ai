@@ -4,21 +4,28 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "register": "node src/register.js",
+    "fix": "prettier . --write",
+    "register": "tsc && node dist/register.js",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "log": "wrangler tail"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "semi": false,
+    "singleQuote": true,
+    "arrowParens": "avoid"
   },
   "devDependencies": {
     "@cloudflare/ai": "^1.0.39",
     "@cloudflare/workers-types": "^4.20231121.0",
     "discord-api-types": "^0.37.66",
     "dotenv": "^16.3.1",
+    "prettier": "^3.2.5",
     "typescript": "^5.3.3",
     "wrangler": "^3.19.0"
   },
   "dependencies": {
-    "discord-interactions": "^3.4.0",
-    "hono": "^3.11.4"
+    "discord-hono": "^0.2.4"
   }
 }
