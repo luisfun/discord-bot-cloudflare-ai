@@ -47,12 +47,10 @@ npm run deploy
 
 Enter `https://discord-ai.YOUER_DOMAIN.workers.dev` in the [INTERACTIONS ENDPOINT URL](https://discord.com/developers/applications).
 
-## 📑 Official Docs
+## 📑 Docs
 
 [Discord Bot](https://discord.com/developers/docs/tutorials/hosting-on-cloudflare-workers)
 
 [Cloudflare AI](https://developers.cloudflare.com/workers-ai)
 
-## 🍼 Official Code Sample
-
-[Discord Bot Sample](https://github.com/discord/cloudflare-sample-app)
+[Discord Hono](https://github.com/LuisFun/discord-hono)
