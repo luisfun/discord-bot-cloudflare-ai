@@ -6,4 +6,4 @@ compatibility_date = "2023-12-06"
 binding = "AI"
 
 [limits]
-cpu_ms = 300
+cpu_ms = 1000

@@ -67,8 +67,7 @@ const ja2en = async (ai: any, ja: string) => {
 
 const code = async (ai: any, prompt: string): Promise<string> => {
   const messages = [{ role: 'user', content: prompt }]
-  const reply = (await ai.run('@hf/thebloke/codellama-7b-instruct-awq', { messages })).response
-  // const reply = (await ai.run('@hf/thebloke/deepseek-coder-6.7b-instruct-awq', { messages })).response
+  const reply = (await ai.run('@hf/thebloke/deepseek-coder-6.7b-instruct-awq', { messages })).response
   console.log(reply)
   return `### Ask\n${prompt}\n### Reply\n${reply}`
 }
