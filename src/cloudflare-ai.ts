@@ -50,6 +50,7 @@ const t2t = async (ai: any, prompt: string, system?: string) => {
   return (await ai.run('@cf/mistral/mistral-7b-instruct-v0.1', { messages })).response as string
 }
 
+/*
 const text = async (ai: any, prompt: string, system?: string) => {
   const p = await m2m(ai, prompt, 'japanese', 'english')
   const s = system ? await m2m(ai, system, 'japanese', 'english') : system
@@ -59,13 +60,12 @@ const text = async (ai: any, prompt: string, system?: string) => {
     ? `### Ask\n${prompt}\n### Reply\n${replyJa}`
     : `### Ask\n- ${prompt}\n- ${system}\n### Reply\n${replyJa}`
 }
+*/
 
-/*
 const text = async (ai: any, prompt: string, system?: string) => {
   const reply = await t2t(ai, prompt, system)
   return !system ? `### Ask\n${prompt}\n### Reply\n${reply}` : `### Ask\n- ${prompt}\n- ${system}\n### Reply\n${reply}`
 }
-*/
 
 const image = async (ai: any, prompt: string): Promise<ArrayBuffer> => {
   return await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', { prompt })
