@@ -8,7 +8,7 @@ import sdxlGenshin from './sdxl-genshin.js' // '.js' is necessary for 'npm run r
  * @param c Context
  * @param type AI type
  */
-const cfai = async (c: Context<Env>, type: 'text' | 'image' | 'genshin' | 'ja2en' | 'code') => {
+const cfai = async (c: Context<Env>, type: 'text' | 'text-en' | 'image' | 'genshin' | 'ja2en' | 'code') => {
   try {
     const ai = new Ai(c.env.AI)
     const prompt = c.command.values[0]
@@ -18,6 +18,9 @@ const cfai = async (c: Context<Env>, type: 'text' | 'image' | 'genshin' | 'ja2en
     switch (type) {
       case 'text':
         content = await text(ai, prompt, prompt2)
+        break
+      case 'text-en':
+        content = await textEn(ai, prompt, prompt2)
         break
       case 'image':
         content = prompt
@@ -42,12 +45,26 @@ const cfai = async (c: Context<Env>, type: 'text' | 'image' | 'genshin' | 'ja2en
 }
 export default cfai
 
-const text = async (ai: any, prompt: string, system?: string) => {
+const t2t = async (ai: any, prompt: string, system?: string) => {
   const messages = [
     { role: 'user', content: prompt },
     { role: 'system', content: system || '' },
   ]
-  const reply = (await ai.run('@cf/mistral/mistral-7b-instruct-v0.1', { messages })).response
+  return (await ai.run('@cf/mistral/mistral-7b-instruct-v0.1', { messages })).response as string
+}
+
+const text = async (ai: any, prompt: string, system?: string) => {
+  const p = await m2m(ai, prompt, 'japanese', 'english')
+  const s = system ? await m2m(ai, system, 'japanese', 'english') : system
+  const replyEn = await t2t(ai, prompt, system)
+  const replyJa = await m2m(ai, replyEn, 'english', 'japanese')
+  return !system
+    ? `### Ask\n${prompt}\n### Reply\n${replyJa}`
+    : `### Ask\n- ${prompt}\n- ${system}\n### Reply\n${replyJa}`
+}
+
+const textEn = async (ai: any, prompt: string, system?: string) => {
+  const reply = await t2t(ai, prompt, system)
   return !system ? `### Ask\n${prompt}\n### Reply\n${reply}` : `### Ask\n- ${prompt}\n- ${system}\n### Reply\n${reply}`
 }
 

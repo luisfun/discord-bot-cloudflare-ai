@@ -9,6 +9,10 @@ export const commands: Commands<Env> = [
     .option(new CommandOption('p', 'AIに聞く内容').required())
     .option(new CommandOption('s', 'システム用プロンプト'))
     .resDefer(cfai, 'text'),
+  new Command('text-en', 'AI chat')
+    .option(new CommandOption('p', 'ask AI').required())
+    .option(new CommandOption('s', 'system prompt'))
+    .resDefer(cfai, 'text-en'),
   new Command('image', '画像生成')
     .option(new CommandOption('p', '画像生成の呪文').required())
     .resDefer(cfai, 'image'),
