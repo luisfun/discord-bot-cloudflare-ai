@@ -1,7 +1,7 @@
 import type { Context } from 'discord-hono'
 import type { Env } from '.'
 import { Ai } from '@cloudflare/ai'
-import sdxlGenshin from './sdxl-genshin'
+import sdxlGenshin from './sdxl-genshin.js' // '.js' is necessary for 'npm run register'.
 
 /**
  * AIの処理 ⇒ Discordの待機中メッセージへ送信
