@@ -14,18 +14,19 @@ const cfai = async (c: Context<Env>, type: 'text' | 'image' | 'genshin' | 'ja2en
     const prompt = c.command.values[0]
     const prompt2 = c.command.values[1]
     let content = ''
-    let imageBuffer: ArrayBuffer | undefined = undefined
+    let buffer: ArrayBuffer | undefined = undefined
     switch (type) {
       case 'text':
         content = await text(ai, prompt, prompt2)
         break
       case 'image':
-        content = prompt
-        imageBuffer = await image(ai, prompt)
+        content = '```\n' + prompt + '\n```'
+        buffer = await image(ai, prompt)
         break
       case 'genshin':
-        content = sdxlGenshin(prompt, prompt2)
-        imageBuffer = await image(ai, content)
+        const p = sdxlGenshin(prompt, prompt2)
+        content = '```\n' + p + '\n```'
+        buffer = await image(ai, p)
         break
       case 'ja2en':
         content = await ja2en(ai, prompt)
@@ -34,10 +35,11 @@ const cfai = async (c: Context<Env>, type: 'text' | 'image' | 'genshin' | 'ja2en
         content = await code(ai, prompt)
         break
     }
-    if (!imageBuffer) await c.followupText(content)
-    else await c.followup({ content }, { blob: new Blob([imageBuffer]), name: 'image.png' })
-  } catch {
+    if (!buffer) await c.followupText(content)
+    else await c.followup({ content }, { blob: new Blob([buffer]), name: 'image.png' })
+  } catch (e) {
     await c.followupText('AI周りでエラーが発生しました')
+    console.log(e)
   }
 }
 export default cfai
@@ -68,7 +70,7 @@ const text = async (ai: any, prompt: string, system?: string) => {
 }
 
 const image = async (ai: any, prompt: string): Promise<ArrayBuffer> => {
-  return await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', { prompt })
+  return await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', { prompt, num_steps: 20 })
 }
 
 const m2m = async (ai: any, text: string, source_lang: string, target_lang: string): Promise<string> => {
@@ -84,6 +86,5 @@ const ja2en = async (ai: any, ja: string) => {
 const code = async (ai: any, prompt: string): Promise<string> => {
   const messages = [{ role: 'user', content: prompt }]
   const reply = (await ai.run('@hf/thebloke/deepseek-coder-6.7b-instruct-awq', { messages })).response
-  console.log(reply)
   return `> ${prompt}\n${reply}`
 }
