@@ -1,6 +1,6 @@
-import type { Context } from 'discord-hono'
-import type { Env } from '.'
 import { Ai } from '@cloudflare/ai'
+import type { Context } from 'discord-hono'
+import type { Env } from './index'
 import sdxlGenshin from './sdxl-genshin.js' // '.js' is necessary for 'npm run register'.
 
 /**
@@ -64,7 +64,7 @@ const text = async (ai: any, prompt: string, system?: string) => {
 
 const text = async (ai: any, prompt: string, system?: string) => {
   const reply = await t2t(ai, prompt, system)
-  return !system ? `### Ask\n${prompt}\n### Reply\n${reply}` : `### Ask\n- ${prompt}\n- ${system}\n### Reply\n${reply}`
+  return !system ? `> ${prompt}\n${reply}` : `> - ${prompt}\n> - ${system}\n${reply}`
 }
 
 const image = async (ai: any, prompt: string): Promise<ArrayBuffer> => {
@@ -78,12 +78,12 @@ const m2m = async (ai: any, text: string, source_lang: string, target_lang: stri
 const ja2en = async (ai: any, ja: string) => {
   const reply1 = await m2m(ai, ja, 'japanese', 'english')
   const reply2 = await m2m(ai, reply1, 'english', 'japanese')
-  return `### 日本語\n${ja}\n### ⇒English\n${reply1}\n### ⇒日本語\n${reply2}`
+  return `> ${ja}\n\`\`\`\n${reply1}\n\`\`\`\n> ${reply2}`
 }
 
 const code = async (ai: any, prompt: string): Promise<string> => {
   const messages = [{ role: 'user', content: prompt }]
   const reply = (await ai.run('@hf/thebloke/deepseek-coder-6.7b-instruct-awq', { messages })).response
   console.log(reply)
-  return `### Ask\n${prompt}\n### Reply\n${reply}`
+  return `> ${prompt}\n${reply}`
 }

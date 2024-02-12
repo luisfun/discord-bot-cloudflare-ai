@@ -8,5 +8,5 @@ export type Env = {
 }
 
 const app = new DiscordHono<Env>()
-app.setCommands(commands)
+app.commands(commands)
 export default app

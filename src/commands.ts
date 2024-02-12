@@ -1,10 +1,8 @@
-import type { Env } from '.'
-import type { Commands } from 'discord-hono'
 import { Command, CommandOption } from 'discord-hono'
 import cfai from './cloudflare-ai.js' // '.js' is necessary for 'npm run register'.
 
 // prettier-ignore
-export const commands: Commands<Env> = [
+export const commands = [
   new Command('text', 'AIチャット')
     .option(new CommandOption('p', 'AIに聞く内容').required())
     .option(new CommandOption('s', 'システム用プロンプト'))
