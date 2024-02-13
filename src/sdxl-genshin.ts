@@ -1,5 +1,5 @@
 const sdxlGenshin = (character: string, prompt?: string) =>
-  'masterpiece, best quality, genshin, ' +
+  'masterpiece, genshin, ' + // 'masterpiece, best quality, genshin, ' +
   (preset.find(e => e.name === character)?.prompt || '') +
   (prompt ? ', ' + prompt : '')
 export default sdxlGenshin

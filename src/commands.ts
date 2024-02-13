@@ -5,8 +5,10 @@ import cfai from './cloudflare-ai.js' // '.js' is necessary for 'npm run registe
 export const commands = [
   new Command('text', 'AIチャット')
     .option(new CommandOption('p', 'AIに聞く内容').required())
-    .option(new CommandOption('s', 'システム用プロンプト'))
     .resDefer(cfai, 'text'),
+  new Command('code', 'コード生成')
+    .option(new CommandOption('p', 'コードの内容').required())
+    .resDefer(cfai, 'code'),
   new Command('image', '画像生成')
     .option(new CommandOption('p', '画像生成の呪文').required())
     .resDefer(cfai, 'image'),
@@ -24,7 +26,4 @@ export const commands = [
   new Command('ja2en', '英語に翻訳')
     .option(new CommandOption('ja', '翻訳する日本語').required())
     .resDefer(cfai, 'ja2en'),
-  new Command('code', 'コード生成')
-    .option(new CommandOption('p', 'コードの内容').required())
-    .resDefer(cfai, 'code'),
 ]
