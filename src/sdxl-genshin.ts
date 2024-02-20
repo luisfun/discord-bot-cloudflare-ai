@@ -1,8 +1,7 @@
-const sdxlGenshin = (character: string, prompt?: string) =>
+export const sdxlGenshin = (character: string, prompt?: string) =>
   'masterpiece, genshin, ' + // 'masterpiece, best quality, genshin, ' +
   (preset.find(e => e.name === character)?.prompt || '') +
   (prompt ? ', ' + prompt : '')
-export default sdxlGenshin
 
 const preset = [
   {

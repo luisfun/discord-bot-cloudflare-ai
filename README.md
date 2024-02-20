@@ -1,5 +1,3 @@
-⚠️ I think that you need a paid plan for workers to run this program on cloudflare.
-
 ## 🚀 Getting Started
 
 [<img alt="Git" src="https://img.shields.io/badge/Git-windows-%23F05032?logo=Git" />](https://gitforwindows.org)
