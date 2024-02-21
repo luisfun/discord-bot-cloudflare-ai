@@ -1,7 +1,6 @@
 import { Ai } from '@cloudflare/ai'
 import type { CommandContext } from 'discord-hono'
 import { CommandHandlers, DiscordHono } from 'discord-hono'
-import { commands } from './commands'
 import { sdxlGenshin } from './sdxl-genshin'
 
 export type Env = {
@@ -25,8 +24,7 @@ const handlers = new CommandHandlers()
 const cfai = async (c: CommandContext<Env>, type: 'text' | 'code' | 'image' | 'genshin' | 'ja2en') => {
   try {
     const ai = new Ai(c.env.AI)
-    const prompt = (c.values[0] || '').toString()
-    const prompt2 = (c.values[1] || '').toString()
+    const prompt = (c.values.p || c.values.ja || '').toString()
     let content = ''
     let blob: Blob | undefined = undefined
     switch (type) {
@@ -41,7 +39,7 @@ const cfai = async (c: CommandContext<Env>, type: 'text' | 'code' | 'image' | 'g
         blob = await image(ai, prompt)
         break
       case 'genshin':
-        const p = sdxlGenshin(prompt, prompt2)
+        const p = sdxlGenshin(c.values.c.toString(), prompt)
         content = '```\n' + p + '\n```'
         blob = await image(ai, p)
         break
@@ -76,6 +74,5 @@ const m2m = async (ai: any, text: string, source_lang: string, target_lang: stri
 
 // main
 const app = new DiscordHono<Env>()
-app.commands(commands)
 app.handlers(handlers)
 export default app
