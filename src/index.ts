@@ -47,10 +47,10 @@ const cfai = async (c: CommandContext<Env>, type: 'text' | 'code' | 'image' | 'g
         content = await ja2en(ai, prompt)
         break
     }
-    if (!blob) await c.followupText(content)
+    if (!blob) await c.followup(content)
     else await c.followup({ content }, { blob, name: 'image.png' })
   } catch (e) {
-    await c.followupText('AI周りでエラーが発生しました')
+    await c.followup('AI周りでエラーが発生しました')
     console.log(e)
   }
 }
