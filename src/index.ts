@@ -1,6 +1,6 @@
 import { Ai } from '@cloudflare/ai'
 import type { CommandContext } from 'discord-hono'
-import { CommandHandlers, DiscordHono } from 'discord-hono'
+import { DiscordHono } from 'discord-hono'
 import { sdxlGenshin } from './sdxl-genshin'
 
 export type Env = {
@@ -9,12 +9,14 @@ export type Env = {
   }
 }
 
-const handlers = new CommandHandlers()
-  .on('text', c => c.resDefer(cfai, 'text'))
-  .on('code', c => c.resDefer(cfai, 'code'))
-  .on('image', c => c.resDefer(cfai, 'image'))
-  .on('image-genshin', c => c.resDefer(cfai, 'genshin'))
-  .on('ja2en', c => c.resDefer(cfai, 'ja2en'))
+const app = new DiscordHono<Env>()
+  .command('text', c => c.resDefer(cfai, 'text'))
+  .command('code', c => c.resDefer(cfai, 'code'))
+  .command('image', c => c.resDefer(cfai, 'image'))
+  .command('image-genshin', c => c.resDefer(cfai, 'genshin'))
+  .command('ja2en', c => c.resDefer(cfai, 'ja2en'))
+
+export default app
 
 /**
  * AIの処理 ⇒ Discordの待機中メッセージへ送信
@@ -71,8 +73,3 @@ const t2i = async (ai: any, prompt: string) =>
   (await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', { prompt, num_steps: 20 })) as ArrayBuffer
 const m2m = async (ai: any, text: string, source_lang: string, target_lang: string) =>
   (await ai.run('@cf/meta/m2m100-1.2b', { text, source_lang, target_lang })).translated_text as string
-
-// main
-const app = new DiscordHono<Env>()
-app.handlers(handlers)
-export default app
