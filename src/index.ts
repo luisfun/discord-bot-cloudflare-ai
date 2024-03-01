@@ -28,7 +28,7 @@ const cfai = async (c: CommandContext<Env>, type: 'text' | 'code' | 'image' | 'g
     const ai = new Ai(c.env.AI)
     const prompt = (c.values.p || c.values.ja || '').toString()
     let content = ''
-    let blob: Blob | undefined = undefined
+    let blobs: Blob[] = []
     switch (type) {
       case 'text':
         content = `> ${prompt}\n\n${await t2t(ai, prompt)}`
@@ -38,19 +38,23 @@ const cfai = async (c: CommandContext<Env>, type: 'text' | 'code' | 'image' | 'g
         break
       case 'image':
         content = '```\n' + prompt + '\n```'
-        blob = await image(ai, prompt)
+        blobs = await Promise.all([0, 1, 2].map(_ => image(ai, prompt)))
         break
       case 'genshin':
         const p = sdxlGenshin(c.values.c.toString(), prompt)
         content = '```\n' + p + '\n```'
-        blob = await image(ai, p)
+        blobs = await Promise.all([0, 1, 2].map(_ => image(ai, p)))
         break
       case 'ja2en':
         content = await ja2en(ai, prompt)
         break
     }
-    if (!blob) await c.followup(content)
-    else await c.followup({ content }, { blob, name: 'image.png' })
+    if (!blobs[0]) await c.followup(content)
+    else
+      await c.followup(
+        { content },
+        blobs.map(blob => ({ blob, name: 'image.png' })),
+      )
   } catch (e) {
     await c.followup('AI周りでエラーが発生しました')
     console.log(e)
@@ -71,5 +75,11 @@ const t2c = async (ai: any, prompt: string) =>
   (await ai.run('@hf/thebloke/deepseek-coder-6.7b-instruct-awq', { prompt })).response as string
 const t2i = async (ai: any, prompt: string) =>
   (await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', { prompt, num_steps: 20 })) as ArrayBuffer
+// 早い&512px リアルすぎる
+//const t2i = async (ai: any, prompt: string) =>
+//  (await ai.run('@cf/lykon/dreamshaper-8-lcm', { prompt, num_steps: 10 })) as ArrayBuffer
+// 早い 色合いが濃い
+//const t2i = async (ai: any, prompt: string) =>
+//  (await ai.run('@cf/bytedance/stable-diffusion-xl-lightning', { prompt, num_steps: 1 })) as ArrayBuffer
 const m2m = async (ai: any, text: string, source_lang: string, target_lang: string) =>
   (await ai.run('@cf/meta/m2m100-1.2b', { text, source_lang, target_lang })).translated_text as string
