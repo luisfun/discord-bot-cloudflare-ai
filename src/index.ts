@@ -82,7 +82,15 @@ const image = async (ai: any, prompt: string) => new Blob([await t2i(ai, prompt)
 const ja2en = async (ai: any, prompt: string) => {
   const reply1 = await m2m(ai, prompt, 'japanese', 'english')
   const reply2 = await m2m(ai, reply1, 'english', 'japanese')
-  return '```' + prompt + '``````' + reply1 + '``````' + reply2 + '```'
+  return (
+    '```' +
+    prompt +
+    '```:arrow_down:    English    :arrow_down:```' +
+    reply1 +
+    '```:arrow_down:    日本語    :arrow_down:```' +
+    reply2 +
+    '```'
+  )
 }
 
 // ai core
