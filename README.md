@@ -6,7 +6,7 @@
 ### 1. Clone and Install
 
 ```shell
-git clone https://github.com/LuisFun/discord-bot-cloudflare-ai discord-bot-cloudflare-ai
+git clone https://github.com/luisfun/discord-bot-cloudflare-ai discord-bot-cloudflare-ai
 cd discord-bot-cloudflare-ai
 npm i
 ```
