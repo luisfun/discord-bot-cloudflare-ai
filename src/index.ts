@@ -1,7 +1,7 @@
 import type { ModelMappings } from '@luisfun/cloudflare-ai-plugin'
 import { Ai, gatewayUrl } from '@luisfun/cloudflare-ai-plugin'
 import type { CommandContext } from 'discord-hono'
-import { DiscordHono } from 'discord-hono'
+import { Button, Components, DiscordHono } from 'discord-hono'
 import { sdxlGenshin } from './sdxl-genshin'
 
 type CommandKey = 'text' | 'code' | 'math' | 'image' | 'image-genshin' | 'ja2en' | (string & {})
@@ -24,6 +24,8 @@ const defaultModel = (type: CommandKey) =>
   type === 'image-genshin' ? '@cf/stabilityai/stable-diffusion-xl-base-1.0' :
   type === 'ja2en' ? '@cf/meta/m2m100-1.2b' :
   '@cf/mistral/mistral-7b-instruct-v0.1'
+
+const components = new Components().row(new Button('delete-self', 'Delete', 'Secondary').emoji({ name: '🗑️' }))
 
 /**
  * AIの処理 ⇒ Discordの待機中メッセージへ送信
@@ -68,14 +70,14 @@ const cfai = async (c: CommandContext<Env>, type: CommandKey) => {
         break
       }
     }
-    if (!blobs[0]) await c.followup(content)
+    if (!blobs[0]) await c.followup({ content, components })
     else
       await c.followup(
-        { content },
+        { content, components },
         blobs.map(blob => ({ blob, name: 'image.png' })),
       )
   } catch (e) {
-    await c.followup('AI周りでエラーが発生しました')
+    await c.followup({ content: 'AI周りでエラーが発生しました', components })
     console.log(e)
   }
 }
@@ -94,4 +96,6 @@ const t2i = async (ai: Ai, model: ImageModels, prompt: string) => {
   return await ai.run(model, { prompt, num_steps }, { 'cf-cache-ttl': 60, 'cf-skip-cache': true })
 }
 
-export default new DiscordHono<Env>().command('', c => c.resDefer(c => cfai(c, c.key)))
+export default new DiscordHono<Env>()
+  .command('', c => c.resDefer(c => cfai(c, c.key)))
+  .component('delete-self', c => c.resDeferUpdate(c.followupDelete))
