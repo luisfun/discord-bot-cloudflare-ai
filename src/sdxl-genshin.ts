@@ -1,7 +1,7 @@
-export const sdxlGenshin = (character: string, prompt?: string) =>
-  'masterpiece, best quality, genshin, ' +
-  (preset.find(e => e.name === character)?.prompt || '') +
-  (prompt ? ', ' + prompt : '')
+export const sdxlGenshin = (character: string | undefined, prompt?: string) =>
+  `masterpiece, best quality, genshin, ${preset.find(e => e.name === character)?.prompt || ''}${
+    prompt ? `, ${prompt}` : ''
+  }`
 
 const preset = [
   {

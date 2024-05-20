@@ -1,9 +1,6 @@
 name = "discord-bot-cloudflare-ai"
 main = "src/index.ts"
-compatibility_date = "2023-12-06"
-
-[ai]
-binding = "AI"
+compatibility_date = "2024-05-20"
 
 [limits]
-cpu_ms = 1000
+cpu_ms = 10
